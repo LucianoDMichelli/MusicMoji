@@ -269,8 +269,8 @@ public class Lyrics {
             IamAuthenticator authenticator;
             LanguageTranslator languageTranslator = null;
 
-            if (lyrics == "") {
-                authenticator = new IamAuthenticator("");
+            if (lyrics != "") {
+                authenticator = new IamAuthenticator(ApiKeys.ibmKey);
                 languageTranslator = new LanguageTranslator("2018-05-01", authenticator);
                 languageTranslator.setServiceUrl("https://api.eu-gb.language-translator.watson.cloud.ibm.com/instances/f7e68812-ed0c-449f-8af5-3beb318abde6");
             }
