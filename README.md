@@ -31,7 +31,7 @@ Originally a school group project
 * Spotify Android SDK -> https://developer.spotify.com/documentation/android/
 * emoji-java by vdurmont -> https://github.com/vdurmont/emoji-java
 
-## Note
+## Notes
 
 Spotify must be installed and you must have an account for the app to work. The app also cannot be in offline mode
 
