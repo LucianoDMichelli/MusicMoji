@@ -7,6 +7,8 @@ Also comes pre-loaded with 10 songs, in the section labelled "Server Songs"
 
 Originally a school group project
 
+![translated to Portuguese](https://i.gyazo.com/95658ed53697893ef7f5e09cd3bd049d.png)
+
 ## My Contributions
 
 * Wrote lyricProcessing() in Lyrics
