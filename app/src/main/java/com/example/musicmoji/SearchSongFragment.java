@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +21,6 @@ import androidx.fragment.app.Fragment;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.protocol.types.Track;
 
 import java.io.IOException;
@@ -35,7 +33,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.content.ContentValues.TAG;
 import static com.example.musicmoji.Main_Activity_Page.mSpotifyAppRemote;
 
 // Similar to SpotifySongFragment but modified for
@@ -50,7 +47,7 @@ public class SearchSongFragment extends Fragment {
     ListView list;
     public ArrayList<String> titles = new ArrayList<String>();
     public ArrayList<String> artists = new ArrayList<String>();
-    //public ArrayList<String> trackID = new ArrayList<String>();
+    public ArrayList<String> albums = new ArrayList<String>();
 
     private SharedPreferences mSharedPreferences;
     private JSONObject playlistJSON;
@@ -84,29 +81,22 @@ public class SearchSongFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Item Clicked", Toast.LENGTH_SHORT).show();
 
                 TextView getTitle = (TextView) view.findViewById(R.id.tv_title);
                 TextView getArtist = (TextView) view.findViewById(R.id.tv_artist);
+                TextView getAlbum = (TextView) view.findViewById(R.id.tvAlbum);
 
                 String strTitle = getTitle.getText().toString().trim();
                 String strArtist = getArtist.getText().toString().trim();
+                String strAlbum = getAlbum.getText().toString().trim();
                 String trackID = songsInfo.get(position).get(0);
-
-                Log.d("listsetONCLICKLISnenter", strTitle + strArtist+ "   "+ trackID);
-                //System.out.println(songsInfo);
-
-                // Log to see if title and artist are obtained
-                // will use to pass to next activity
-                Log.d("Passed Title", strTitle);
-                Log.d("Passed Artist", strArtist);
 
                 Intent intent = new Intent(getActivity(), PlaySongForSpotify.class);
                 intent.putExtra("Title", strTitle);
                 intent.putExtra("Artist", strArtist);
-                intent.putExtra("duration_ms", songsInfo.get(position).get(3));
+                intent.putExtra("Album", strAlbum);
+                intent.putExtra("duration_ms", songsInfo.get(position).get(4));
                 startActivity(intent);
-                //((Main_Activity_Page)getActivity()).connected(trackID);
                 connected(trackID);
             }
         });
@@ -122,10 +112,8 @@ public class SearchSongFragment extends Fragment {
             String name = songInfoJSON.getString("name");
             String id = songInfoJSON.getString("id");
             String duration_ms = songInfoJSON.getString("duration_ms");
-//            double duration = Integer.valueOf(duration_ms);
-//            duration = duration/60000;
+            String album = songInfoJSON.getJSONObject("album").getString("name");
             JSONArray artistsJSON = songInfoJSON.getJSONArray("artists");
-            //JSONArray artists = artistsINFO.getJSONArray("artists");
             StringBuilder artistsName = new StringBuilder();
             for (int j = 0; j < artistsJSON.size() - 1; j++) {
                 JSONObject artistInfo = artistsJSON.getJSONObject(j);
@@ -141,12 +129,13 @@ public class SearchSongFragment extends Fragment {
             songInfo.add(id);
             songInfo.add(name);
             songInfo.add(artist);
+            songInfo.add(album);
             songInfo.add(duration_ms);
-//            songInfo.add(String.format("%.2f", duration));
             songsInfo.add(songInfo);
             System.out.println(name);
             titles.add(name);
             artists.add(artist);
+            albums.add(album);
         }
         // here you check the value of getActivity() and break up if needed
         if(getActivity() == null)
@@ -157,7 +146,7 @@ public class SearchSongFragment extends Fragment {
             public void run() {
             // create instance of class CustomServerAdapter and pass in the
             // activity, the titles, and artists that our custom view wants to show
-            CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists);
+            CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists, albums);
             // set adapter to list
             list.setAdapter(adapter);
             }
@@ -168,7 +157,6 @@ public class SearchSongFragment extends Fragment {
 
     private void getPlaylistFromSpotify(String query) {
         //need to get play list first, temporary
-        Log.d("SearchFragment", "searchSongFragment transaction is successful! ");
         String url = "https://api.spotify.com/v1/search?query=" + query + "&type=track&market=US&offset=0&limit=20";
         String token = mSharedPreferences.getString("token", "");
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -187,7 +175,6 @@ public class SearchSongFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String res = response.body().string();
-                Log.d("Spotify Info", "onResponse: " + res);
                 playlistJSON = JSONObject.parseObject(res);
                 getSongsInfo();
             }
@@ -199,9 +186,8 @@ public class SearchSongFragment extends Fragment {
     class CustomSpotifyAdapter extends ArrayAdapter {
 
         // The constructor for the adapter
-        CustomSpotifyAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists) {
+        CustomSpotifyAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists, ArrayList<String> albums) {
             super(c, R.layout.list_item, R.id.tv_title, titles);
-
         }
 
         // gets the view and fills it in with custom information
@@ -213,10 +199,12 @@ public class SearchSongFragment extends Fragment {
             // finds the text view by id using View v as reference
             TextView title = (TextView) v.findViewById(R.id.tv_title);
             TextView artist = (TextView) v.findViewById(R.id.tv_artist);
+            TextView album = (TextView) v.findViewById(R.id.tvAlbum);
 
             // sets the text with custom information passed in during instantiation
             title.setText(titles.get(position));
             artist.setText(artists.get(position));
+            album.setText(albums.get(position));
             // returns the view
             return v;
         }
@@ -234,23 +222,9 @@ public class SearchSongFragment extends Fragment {
         getActivity().getApplicationContext().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        getActivity().unregisterReceiver(mBroadcastReceiver);
-//    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//    }
-
     //user authorization and connect our app with spotify
     private void connected(String trackID) {
         // Play a playlist
-        PlayerApi playerApi = mSpotifyAppRemote.getPlayerApi();
-
         mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+ trackID);
 
         // Subscribe to PlayerState
@@ -259,7 +233,6 @@ public class SearchSongFragment extends Fragment {
                 .setEventCallback(playerState -> {
                     final Track track = playerState.track;
                     if (track != null) {
-                        Log.d("MainActivity", track.name + " by " + track.artist.name+ "is playing?" + playerState.isPaused);
                         Main_Activity_Page.isPlaying = !(playerState.isPaused);
                     }
                 });

@@ -4,10 +4,12 @@ public class ServerSongsData {
 
     public String title;
     public String artist;
+    public String album;
 
-    public ServerSongsData(String title, String artist) {
+    public ServerSongsData(String title, String artist, String album) {
         this.title = title;
         this.artist = artist;
+        this.album = album;
     }
 
     public ServerSongsData(){}
@@ -20,6 +22,8 @@ public class ServerSongsData {
         return artist;
     }
 
+    public String getAlbum() { return album; }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -27,4 +31,6 @@ public class ServerSongsData {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+
+    public void setAlbum(String album) { this.album = album; }
 }

@@ -1,28 +1,18 @@
 package com.example.musicmoji;
 
 import androidx.annotation.NonNull;
-//import android.app.FragmentManager;
-//import android.app.FragmentTransaction;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
-import android.widget.FrameLayout.LayoutParams;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -32,28 +22,16 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-
-import com.spotify.protocol.client.Subscription;
-import com.spotify.protocol.types.PlayerState;
-import com.spotify.protocol.types.Track;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-
-
 public class Main_Activity_Page extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
 
 
     // Initializes the client information and other Spotify connection parameters
     // includes a callback uri so after login, the user returns back to the app
-    private static final String CLIENT_ID = "76d0e59cae5b4af9bfc445a3ceaf3cfe";
+    private static final String CLIENT_ID = ApiKeys.spotifyClientID;
     private static final String REDIRECT_URI = "http://musicmoji.com/callback/";
     public static SpotifyAppRemote mSpotifyAppRemote;
+    public static PlayerApi playerApi;
     public static Boolean isPlaying;
     // Set the connection parameters
     public static ConnectionParams connectionParams =
@@ -181,7 +159,6 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
                         .replace(R.id.fragment_container, searchSongFragment)
                         .commit();
 
-                Toast.makeText(getBaseContext(), query, Toast.LENGTH_SHORT).show();
                 return true;
             }
             @Override
@@ -219,10 +196,8 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
                     @Override
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d("MainActivity", "Connected! Yay!");
-
+                        playerApi = mSpotifyAppRemote.getPlayerApi();
                         // Now you can start interacting with App Remote
-                        //connected();
                     }
 
                     @Override
@@ -238,42 +213,17 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     // It gets the user's playlist information
     private void connected(String trackID) {
         // Play a playlist
-        PlayerApi playerApi = mSpotifyAppRemote.getPlayerApi();
-        mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+ trackID);
+        playerApi.play("spotify:track:"+ trackID);
 
         // Subscribe to PlayerState
-        mSpotifyAppRemote.getPlayerApi()
+        playerApi
                 .subscribeToPlayerState()
                 .setEventCallback(playerState -> {
                     final Track track = playerState.track;
                     if (track != null) {
-                        Log.d("MainActivity", track.name + " by " + track.artist.name+ "is playing?" + playerState.isPaused);
                         isPlaying = !(playerState.isPaused);
                     }
                 });
-    }
-
-//    public static void paused(){
-//        mSpotifyAppRemote.getPlayerApi().pause();
-//
-//        // Subscribe to PlayerState
-//        mSpotifyAppRemote.getPlayerApi()
-//                .subscribeToPlayerState()
-//                .setEventCallback(playerState -> {
-//                    final Track track = playerState.track;
-//                    if (track != null) {
-//                        Log.d("MainActivity", track.name + " by " + track.artist.name+ "is playing?" + playerState.isPaused);
-//                        isPlaying = !(playerState.isPaused);
-//                    }
-//                });
-//    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mSpotifyAppRemote.getPlayerApi().pause();
-
     }
 
     // If the connection is stopped, then disconnect from Spotify
@@ -281,13 +231,14 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
+        playerApi.pause();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSpotifyAppRemote.getPlayerApi().pause();
+        playerApi.pause();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 

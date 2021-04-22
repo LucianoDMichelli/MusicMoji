@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,18 +22,12 @@ import androidx.fragment.app.Fragment;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.client.CallResult;
-import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -56,7 +49,7 @@ public class SpotifySongFragment extends Fragment {
     ListView list;
     public ArrayList<String> titles = new ArrayList<String>();
     public ArrayList<String> artists = new ArrayList<String>();
-    //public ArrayList<String> trackID = new ArrayList<String>();
+    public ArrayList<String> albums = new ArrayList<String>();
 
     private SharedPreferences mSharedPreferences;
     private JSONObject playlistJSON;
@@ -88,33 +81,23 @@ public class SpotifySongFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Item Clicked", Toast.LENGTH_SHORT).show();
 
                 TextView getTitle = (TextView) view.findViewById(R.id.tv_title);
                 TextView getArtist = (TextView) view.findViewById(R.id.tv_artist);
+                TextView getAlbum = (TextView) view.findViewById(R.id.tvAlbum);
 
                 String strTitle = getTitle.getText().toString().trim();
                 String strArtist = getArtist.getText().toString().trim();
+                String strAlbum = getAlbum.getText().toString().trim();
                 String trackID = songsInfo.get(position).get(0);
-
-                Log.d("listsetONCLICKLISnenter", strTitle + strArtist+ "   "+ trackID);
-                System.out.println(songsInfo);
-
-
-
-                // Log to see if title and artist are obtained
-                // will use to pass to next activity
-                Log.d("Passed Title", strTitle);
-                Log.d("Passed Artist", strArtist);
-
 
         // pass the information of current playing song to play song page.
                 Intent intent = new Intent(getActivity(), PlaySongForSpotify.class);
                 intent.putExtra("Title", strTitle);
                 intent.putExtra("Artist", strArtist);
-                intent.putExtra("duration_ms", songsInfo.get(position).get(3));
+                intent.putExtra("Album", strAlbum);
+                intent.putExtra("duration_ms", songsInfo.get(position).get(4));
                 startActivity(intent);
-                //((Main_Activity_Page)getActivity()).connected(trackID);
                 connected(trackID);
             }
         });
@@ -123,7 +106,6 @@ public class SpotifySongFragment extends Fragment {
     }
     //----------------------------------------------------------- Method to extracting tracks' information from JSON file-------------------------
     private void getSongsInfo() {
-        //JSONObject test = playlistJSON.getJSONObject("items");
         JSONArray items = playlistJSON.getJSONArray("items");
         for (int i = 0; i < items.size(); i++) {
             List<String> songInfo = new ArrayList<>();
@@ -131,6 +113,7 @@ public class SpotifySongFragment extends Fragment {
             JSONObject trackJSON = songInfoJSON.getJSONObject("track");
             String name = trackJSON.getString("name");
             String id = trackJSON.getString("id");
+            String album = trackJSON.getJSONObject("album").getString("name");
             String duration_ms = trackJSON.getString("duration_ms");
             JSONArray artistsJSON = trackJSON.getJSONArray("artists");
             StringBuilder artistsName = new StringBuilder();
@@ -147,12 +130,13 @@ public class SpotifySongFragment extends Fragment {
             songInfo.add(id);
             songInfo.add(name);
             songInfo.add(artist);
+            songInfo.add(album);
             songInfo.add(duration_ms);
             songsInfo.add(songInfo);
             System.out.println(name);
             titles.add(name);
-            //trackID.add(id);
             artists.add(artist);
+            albums.add(album);
         }
         // here you check the value of getActivity() and break up if needed
         if(getActivity() == null)
@@ -163,7 +147,7 @@ public class SpotifySongFragment extends Fragment {
             public void run() {
             // create instance of class CustomServerAdapter and pass in the
             // activity, the titles, and artists that our custom view wants to show
-            CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists);
+            CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists, albums);
             // set adapter to list
             list.setAdapter(adapter);
             }
@@ -196,7 +180,6 @@ public class SpotifySongFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String res = response.body().string();
-                Log.d("Spotify Info", "onResponse: " + res);
                 playlistJSON = JSONObject.parseObject(res);
                 getSongsInfo();
             }
@@ -208,7 +191,7 @@ public class SpotifySongFragment extends Fragment {
     class CustomSpotifyAdapter extends ArrayAdapter {
 
         // The constructor for the adapter
-        CustomSpotifyAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists) {
+        CustomSpotifyAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists, ArrayList<String> albums) {
             super(c, R.layout.list_item, R.id.tv_title, titles);
 
         }
@@ -222,11 +205,13 @@ public class SpotifySongFragment extends Fragment {
             // finds the text view by id using View v as reference
             TextView title = (TextView) v.findViewById(R.id.tv_title);
             TextView artist = (TextView) v.findViewById(R.id.tv_artist);
+            TextView album = (TextView) v.findViewById(R.id.tvAlbum);
 
 
             // sets the text with custom information passed in during instantiation
             title.setText(titles.get(position));
             artist.setText(artists.get(position));
+            album.setText(albums.get(position));
             // returns the view
             return v;
         }
@@ -244,23 +229,8 @@ public class SpotifySongFragment extends Fragment {
         getActivity().getApplicationContext().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        getActivity().unregisterReceiver(mBroadcastReceiver);
-//    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//    }
-
 //user authorization and connect our app with spotify
     private void connected(String trackID) {
-
-        PlayerApi playerApi = mSpotifyAppRemote.getPlayerApi();
-
         mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+ trackID);
 
         // Subscribe to PlayerState
@@ -269,7 +239,6 @@ public class SpotifySongFragment extends Fragment {
                 .setEventCallback(playerState -> {
                     final Track track = playerState.track;
                     if (track != null) {
-                        Log.d("MainActivity", track.name + " by " + track.artist.name+ "is playing?" + playerState.isPaused);
                         Main_Activity_Page.isPlaying = !(playerState.isPaused);
                     }
                 });

@@ -29,12 +29,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             String trackName = intent.getStringExtra("track");
             int trackLengthInSec = intent.getIntExtra("length", 0);
             // Do something with extracted information...
-            Log.d("broadcast receiver", "broadcast receiver" + trackId+" " +trackLengthInSec +"  "+ trackLengthInSec);
         } else if (action.equals(BroadcastTypes.PLAYBACK_STATE_CHANGED)) {
             boolean playing = intent.getBooleanExtra("playing", false);
             int positionInMs = intent.getIntExtra("playbackPosition", 0);
             // Do something with extracted information
-            Log.d("broadcast receiver", "broadcast receiver" + playing+" " + positionInMs +"  ");
         } else if (action.equals(BroadcastTypes.QUEUE_CHANGED)) {
             // Sent only as a notification, your app may want to respond accordingly.
         }

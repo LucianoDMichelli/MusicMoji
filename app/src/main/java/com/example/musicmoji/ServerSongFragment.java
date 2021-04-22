@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -37,6 +33,7 @@ public class ServerSongFragment extends Fragment {
     ListView list;
     public ArrayList<String> titles = new ArrayList<String>();
     public ArrayList<String> artists = new ArrayList<String>();
+    public ArrayList<String> albums = new ArrayList<String>();
 
     @Nullable
     @Override
@@ -48,7 +45,7 @@ public class ServerSongFragment extends Fragment {
 
         // create instance of class CustomServerAdapter and pass in the
         // activity, the titles, and artists that our custom view wants to show
-        final CustomServerAdapter adapter = new CustomServerAdapter(getActivity(), titles, artists);
+        final CustomServerAdapter adapter = new CustomServerAdapter(getActivity(), titles, artists, albums);
         // set adapter to list
         list.setAdapter(adapter);
 
@@ -67,6 +64,40 @@ public class ServerSongFragment extends Fragment {
                         ServerSongsData s = ds.getValue(ServerSongsData.class);
                         titles.add(s.getTitle());
                         artists.add(s.getArtist());
+                        // I did not write this part so I have no idea where the title and artist data is stored
+                        // (possibly reading it from the files? not sure but they don't all have the album name anyway)
+                        switch (s.getTitle()) {
+                            case ("Boulevard of Broken Dreams"):
+                                albums.add("Greatest Hits: God's Favorite Band");
+                                break;
+                            case ("Viva La Vida"):
+                                albums.add("Viva La Vida Or Death And All His Friends");
+                                break;
+                            case ("Halo"):
+                                albums.add("I AM...SASHA FIERCE");
+                                break;
+                            case ("Fireflies"):
+                                albums.add("Ocean Eyes");
+                                break;
+                            case ("Rolling in the Deep"):
+                                albums.add("21");
+                                break;
+                            case ("Sugar"):
+                                albums.add("V");
+                                break;
+                            case ("Royals"):
+                                albums.add("The Love Club EP");
+                                break;
+                            case ("Radioactive"):
+                                albums.add("Night Visions");
+                                break;
+                            case ("Counting Stars"):
+                                albums.add("Native");
+                                break;
+                            default: // ("Castle on the Hill"):
+                                albums.add("Castle on the Hill");
+                                break;
+                        }
 
                         // notify the adapter a change occurred and to update the listview
                         adapter.notifyDataSetChanged();
@@ -84,22 +115,19 @@ public class ServerSongFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getActivity(), "Item Clicked", Toast.LENGTH_SHORT).show();
                 TextView getTitle = (TextView) view.findViewById(R.id.tv_title);
                 TextView getArtist = (TextView) view.findViewById(R.id.tv_artist);
+                TextView getAlbum = (TextView) view.findViewById(R.id.tvAlbum);
 
                 String strTitle = getTitle.getText().toString().trim();
                 String strArtist = getArtist.getText().toString().trim();
-
-                // Log to see if title and artist are obtained
-                // will use to pass to next activity
-//                Log.d("Passed Title", strTitle);
-//                Log.d("Passed Artist", strArtist);
+                String strAlbum = getAlbum.getText().toString().trim();
 
                 // Move to PlaySong Activity and pass it the title and artist
                 Intent intent = new Intent(getActivity(), PlaySong.class);
                 intent.putExtra("Title", strTitle);
                 intent.putExtra("Artist", strArtist);
+                intent.putExtra("Album", strAlbum);
                 startActivity(intent);
             }
         });
@@ -114,7 +142,7 @@ public class ServerSongFragment extends Fragment {
     class CustomServerAdapter extends ArrayAdapter {
 
         // The constructor for the adapter
-        CustomServerAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists) {
+        CustomServerAdapter(Context c, ArrayList<String> titles, ArrayList<String> artists, ArrayList<String> albums) {
             super(c, R.layout.list_item, R.id.tv_title, titles);
 
         }
@@ -128,10 +156,12 @@ public class ServerSongFragment extends Fragment {
             // finds the text view by id using View v as reference
             TextView title = (TextView) v.findViewById(R.id.tv_title);
             TextView artist = (TextView) v.findViewById(R.id.tv_artist);
+            TextView album = (TextView) v.findViewById(R.id.tvAlbum);
 
             // sets the text with custom information passed in during instantiation
             title.setText(titles.get(position));
             artist.setText(artists.get(position));
+            album.setText(albums.get(position));
 
             // returns the view
             return v;

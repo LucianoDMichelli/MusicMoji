@@ -54,7 +54,7 @@ public class SettingsFragment extends Fragment {
         languages.add("Portuguese");
         languages.add("French");
         languages.add("Chinese");
-        languages.add("None");
+        languages.add("None (only display original language)");
 
         // get the listview we want to customize
         list = (ListView) view.findViewById(R.id.language_listview);
@@ -73,11 +73,6 @@ public class SettingsFragment extends Fragment {
                 TextView getLanguage = (TextView) view.findViewById(R.id.tv_language);
 
                 String strLanguage = getLanguage.getText().toString().trim();
-
-                // Log to see if title and artist are obtained
-                // will use to pass to next activity
-//                Log.d("Passed Title", strLanguage);
-//                Toast.makeText(getActivity(), strLanguage + " Clicked", Toast.LENGTH_SHORT).show();
 
                 // Save the language
                 // Shared Preference Object
@@ -130,11 +125,10 @@ public class SettingsFragment extends Fragment {
             case "Portuguese": editor.putString("language", "pt"); break;
             case "French": editor.putString("language", "fr"); break;
             case "Chinese": editor.putString("language", "zh"); break;
-            case "None": editor.putString("language", ""); break;
+            case "None (only display original language)": editor.putString("language", ""); break;
 
         }
         editor.commit();
-//        Toast.makeText(getContext(), getContext().toString(), Toast.LENGTH_LONG).show();
 
         Toast.makeText(getContext(), "Language Preference Updated", Toast.LENGTH_LONG).show();
     }
