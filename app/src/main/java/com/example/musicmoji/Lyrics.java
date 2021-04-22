@@ -269,10 +269,10 @@ public class Lyrics {
             IamAuthenticator authenticator;
             LanguageTranslator languageTranslator = null;
 
-            if (lyrics != "") {
+            if (!lyrics.equals("")) {
                 authenticator = new IamAuthenticator(ApiKeys.ibmKey);
                 languageTranslator = new LanguageTranslator("2018-05-01", authenticator);
-                languageTranslator.setServiceUrl("https://api.eu-gb.language-translator.watson.cloud.ibm.com/instances/f7e68812-ed0c-449f-8af5-3beb318abde6");
+                languageTranslator.setServiceUrl(ApiKeys.ibmInstanceUrl);
             }
 
 // 1. Read each line. Translate if need be then split on spaces so we can read each word
