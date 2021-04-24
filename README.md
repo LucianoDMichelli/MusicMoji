@@ -7,6 +7,8 @@ Also comes pre-loaded with 10 songs, in the section labelled "Server Songs"
 
 Originally a school group project
 
+Demo: https://youtu.be/jpO03njJhgI
+
 ![translated to Portuguese](https://i.gyazo.com/95658ed53697893ef7f5e09cd3bd049d.png)
 
 ## My Contributions
@@ -47,4 +49,5 @@ For Spotify, you will need to [register your app](https://developer.spotify.com/
 
 ## Known Bugs/Issues
 * There is a slight delay when pausing/unpausing Spotify songs (possibly an issue with the Spotify SDK)
+* Autoplay for Spotify songs does not work if saved lyrics are retrieved
 * Spotify authentication is required to use the app (even if user just wants to listen to the pre-loaded songs). User also has to authenticate each time they use the app, so Spotify needs to be in online mode and the user has to have an internet connection (again, even if they only want to listen to the pre-loaded songs)
