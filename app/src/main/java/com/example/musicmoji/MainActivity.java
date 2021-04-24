@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 // Auth flow returned an error
                 case ERROR:
                     // Handle error response
+                    // Make sure offline mode for Spotify is not enabled
                     Toast.makeText(getBaseContext(), "An Error Has Occurred: Authentication Not Recognized", Toast.LENGTH_SHORT).show();
                     break;
 
