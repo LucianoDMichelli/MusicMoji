@@ -53,7 +53,7 @@ public class SettingsFragment extends Fragment {
         languages.add("Spanish");
         languages.add("Portuguese");
         languages.add("French");
-        languages.add("Chinese");
+        languages.add("Chinese (Simplified)");
         languages.add("None (only display original language)");
 
         // get the listview we want to customize
@@ -124,7 +124,7 @@ public class SettingsFragment extends Fragment {
             case "Spanish": editor.putString("language", "es"); break;
             case "Portuguese": editor.putString("language", "pt"); break;
             case "French": editor.putString("language", "fr"); break;
-            case "Chinese": editor.putString("language", "zh"); break;
+            case "Chinese (Simplified)": editor.putString("language", "zh"); break;
             case "None (only display original language)": editor.putString("language", ""); break;
 
         }

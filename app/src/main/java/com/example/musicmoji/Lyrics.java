@@ -185,7 +185,7 @@ public class Lyrics {
             // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
             new Handler(Looper.getMainLooper()).post(() -> {
                 lyric_container.setText(storedLyrics);
-                Toast.makeText(context, "Retrieved previously generated lyrics", Toast.LENGTH_LONG).show(); // fixes java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
+                Toast.makeText(context, "Retrieved previously generated lyrics", Toast.LENGTH_SHORT).show(); // fixes java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
             });
             return;
         }
@@ -231,7 +231,7 @@ public class Lyrics {
                 "rater", "ratin'", "rating", "red", "register", "rewin", "ringin'", "ringing", "roc", "roer", "ruer", "ruin'", "ruing",
                 "sal", "sant", "scar", "scoot", "scout", "scoutin'", "scouting", "scree", "screener", "screenin'", "screening",
                 "secre", "seed", "seein'", "seeing", "seer", "senega", "ser", "sevener", "shee", "sher", "shi", "shiel", "shielin'",
-                "shieling", "shin", "sho", "shoo", "show", "showin'", "showing", "shy", "sic", "sier", "sill", "sin", "sis", "sker", "skid",
+                "shieling", "shin", "sho", "shoo", "show", "showin'", "showing", "shy", "sic", "sier", "sill", "sin", "single", "sis", "sker", "skid",
                 "slin'", "sling", "sober", "soss", "spade", "spaer", "sparkless", "speeder", "speedin'", "speeding", "spor",
                 "springer", "springin'", "springing", "starer", "starin'", "staring", "startin'", "starting", "stin'", "sting",
                 "stoper", "stopin'", "stoping", "string", "strings", "sty", "sunn", "swa", "sweater", "swing", "tad", "takin'", "taking", "targe", "tax", "taxin'", "taxing", "tearer",
@@ -971,7 +971,6 @@ public class Lyrics {
             }
             else {
                 // Get rid of extra spaces before punctuation
-                // use replace with regex? replace(" [A-Z]", "[A-Z]")?
 
                 // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
                 new Handler(Looper.getMainLooper()).post(() ->
@@ -983,11 +982,11 @@ public class Lyrics {
     }
 
     private String returnPunctuation(String lyrics) {
-        return lyrics.replace(" *\n* ", "\n").replace(" *\r* ", "\r").replace(" ,", ",").replace(" ?", "?").replace(" .", ".").replace("_", "-").replace(" !", "!").replace("( ", "(").replace(" )", ")"); //.replace(" '", "'")
+        return lyrics.replace(" *\n* ", "\n").replace(" *\r* ", "\r").replace(" ,", ",").replace(" ?", "?").replace(" .", ".").replace("_", "-").replace(" !", "!").replace("( ", "(").replace(" )", ")").replace(" :", ":"); //.replace(" '", "'")
     }
 
     private String spacePunctuation(String lyrics) {
-        return lyrics.replace("\n", " *\n* ").replace("\r", " *\r* ").replace(",", " ,").replace("?", " ?").replace(".", " .").replace("-", "_").replace("!", " !").replace("(", "( ").replace(")", " )"); //.replace("'", " '")
+        return lyrics.replace("\n", " *\n* ").replace("\r", " *\r* ").replace(",", " ,").replace("?", " ?").replace(".", " .").replace("-", "_").replace("!", " !").replace("(", "( ").replace(")", " )").replace(":", " :"); //.replace("'", " '")
     }
 
     private void saveEmojiLyrics(SpannableStringBuilder lyrics, String languages, String Title, String Artist, Context context){

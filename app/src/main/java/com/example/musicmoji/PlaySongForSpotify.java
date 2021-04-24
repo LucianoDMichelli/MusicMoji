@@ -110,7 +110,7 @@ public class PlaySongForSpotify extends AppCompatActivity {
         // String for which the current Language is
         String lang = language.getString("languageFull", "None");
         // Toast to tell the user which Language it is
-        Toast.makeText(getApplicationContext(), "The Selected Language is: " + lang, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "The Selected Language is: " + lang, Toast.LENGTH_SHORT).show();
 
 
         // set preferredLanguage using SharedPreferences
@@ -192,7 +192,7 @@ public class PlaySongForSpotify extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------

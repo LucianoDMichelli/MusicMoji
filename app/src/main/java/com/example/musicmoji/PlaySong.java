@@ -250,13 +250,13 @@ public class PlaySong extends AppCompatActivity {
         }
     }
 
-    // Pause when home button is pressed
-    @Override
-    public void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        mp.pause();
-        playBtn.setBackgroundResource(R.drawable.play);
-    }
+//    // Pause when home button is pressed
+//    @Override
+//    public void onUserLeaveHint() {
+//        super.onUserLeaveHint();
+//        mp.pause();
+//        playBtn.setBackgroundResource(R.drawable.play);
+//    }
 
     @Override
     public void onDestroy() {
@@ -318,12 +318,19 @@ public class PlaySong extends AppCompatActivity {
         this.finish();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mp.pause();
+        playBtn.setBackgroundResource(R.drawable.play);
+    }
+
     void retrievePreferredLanguage(){
         SharedPreferences language = getSharedPreferences("LanguageSelection", Context.MODE_PRIVATE);
         preferredLanguage = language.getString("language", "");
 
         String lang = language.getString("languageFull", "None");
-        Toast.makeText(getApplicationContext(), "The Current Language is: " + lang, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "The Selected Language is: " + lang, Toast.LENGTH_SHORT).show();
     }
 
 }
