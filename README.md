@@ -37,9 +37,9 @@ Originally a school group project
 
 ## Notes
 
-Spotify must be installed and you must have an account for the app to work. The app also cannot be in offline mode
+Spotify must be installed and you must have a premium account for the app to work (free accounts can only use shuffle play, so the songs that users select will not actually be the ones that are played). The app also cannot be in offline mode
 
-You will need developer keys for the language translator, lyric API, and Spotify. Spotify is free, the other two have free versions.
+You will need developer keys for the language translator, lyric API, and Spotify. Spotify is free, the other two have free versions
 
 The language translator allows 1,000,000 translated characters per month
 
