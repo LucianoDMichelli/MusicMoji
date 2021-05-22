@@ -2,3 +2,4 @@
 *.html linguist-detectable=false
 *.js linguist-detectable=false
 *.html linguist-detectable=false
+*.kt linguist-detectable=false
