@@ -40,6 +40,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.musicmoji.R.string.LyricsUnavailable;
+
 public class Lyrics {
 
     private String lyrics;
@@ -244,12 +246,7 @@ public class Lyrics {
 // If song does not return lyrics for some reason, no need to go through the whole checking process
         if (lyrics.equals("")) {
             // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    lyric_container.setText("Lyrics unavailable for this song");
-                }
-            });
+            new Handler(Looper.getMainLooper()).post(() -> lyric_container.setText(LyricsUnavailable));
         }
 
         else {
@@ -447,12 +444,6 @@ public class Lyrics {
                     // Would not return anything but the emoji fits the words
                     if (lyric.equals("she") || lyric.equals("her") || lyric.equals("hers") || lyric.equals("she's") || lyric.equals("she'll")) {
                         lineLyrics.append("(\uD83D\uDC69) ");
-                        canGenerateEmojis = true;
-                        continue;
-                    }
-
-                    if (lyric.equals("asleep") || lyric.equals("sleeps")) {
-                        lineLyrics.append("(\uD83D\uDE34)");
                         canGenerateEmojis = true;
                         continue;
                     }
@@ -697,7 +688,7 @@ public class Lyrics {
 
                     // Returns sleepy face emoji
                     // Would not return anything but this fits the word
-                    if (lyric.equals("sleep") || lyric.equals("sleeps")) {
+                    if (lyric.equals("sleep") || lyric.equals("sleeps") || lyric.equals("asleep")) {
                         lineLyrics.append("(\uD83D\uDE34) ");
                         canGenerateEmojis = true;
                         continue;
@@ -808,14 +799,14 @@ public class Lyrics {
                     // adjective -> noun (cloudy -> cloud)
                     // -y -> -ies (fry -> fries)
                     // There are exceptions to this rule but none that would return an incorrect emoji
-                    else if (lyric.substring(lyric.length() - 1).equals("y")) {
+                    else if (lyric.endsWith("y")) {
                         String minusY = lyric.substring(0, lyric.length() - 1);
                         checks.add(minusY);
                         checks.add(minusY + "ies");
                     }
 
                     // -ies -> -y (parties -> party)
-                    else if (lyric.length() > 3 && lyric.substring(lyric.length() - 3).equals("ies")) {
+                    else if (lyric.length() > 3 && lyric.endsWith("ies")) {
                         checks.add(lyric.substring(0, lyric.length() - 3) + 'y');
                     } else {
 

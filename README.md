@@ -19,14 +19,14 @@ Originally a school group project
   * In addition to being displayed in the original language, the user can choose one of 5 languages to translate the lyrics to: English, Spanish, Portuguese, French, and Chinese (Simplified)
     * Translated lyrics will be under each line of the original language
     * Translated lyrics will contain emojis
-  * Implemented lyric saving so that songs only have to be emojified/translated for a given language once
+  * Implemented lyric saving so that songs only have to be emojified/translated once for a given language
 * Co-wrote getLyrics() in Lyrics
   * Parsed lyric API response and added necessary formatting to lyric string
   * Updated lyric API after original was deprecated -> made necessary changes to API call and parsing
 * Co-wrote DownloadLyricsAndTranslate in PlaySong and PlaySongForSpotify
   * Got class working so that getLyrics() and lyricProcessing() work asynchronously
     * When a song is selected, the Song screen appears with a message telling the user that emojis are being generated, and the music is paused. When they are ready they will replace the message and the song will start playing.
-* Fixed bugs, cleaned up code, and added intended features according to professor feedback after app presentation
+* Fixed bugs, cleaned up code, and added intended features according to professor feedback after app presentation (see changelog)
 
 ## APIs/Libraries used
 
@@ -49,5 +49,7 @@ For Spotify, you will need to [register your app](https://developer.spotify.com/
 
 ## Known Bugs/Issues
 * There is a slight delay when pausing/unpausing Spotify songs (possibly an issue with the Spotify SDK)
-* Autoplay for Spotify songs does not work if saved lyrics are retrieved
+* Autoplay for Spotify songs may not work if saved lyrics are retrieved
 * Spotify authentication is required to use the app (even if user just wants to listen to the pre-loaded songs). User also has to authenticate each time they use the app, so Spotify needs to be in online mode and the user has to have an internet connection (again, even if they only want to listen to the pre-loaded songs)
+    * User will only be required to grant permissions once; subsequent uses of the app will only require tapping the authentication button
+* Non-English songs that are translated will only have emojis in the translated lyrics, not in the original lyrics (this was a decision made due to time constraints for the app presentation)
