@@ -1,4 +1,7 @@
 # MusicMoji
+
+*For devices running Lollipop (API 21) and newer*
+
 Reads lyrics of selected song and displays them for the user with emojis inserted
 
 Allows users to play music through Spotify using their Recently Played playlist, or by using the search function
