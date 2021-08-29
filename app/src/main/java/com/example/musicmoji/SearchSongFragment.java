@@ -26,6 +26,7 @@ import com.spotify.protocol.types.Track;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,17 +55,12 @@ public class SearchSongFragment extends Fragment {
     private List<List<String>> songsInfo;
 
 
-    private MyBroadcastReceiver mBroadcastReceiver;
-
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_spotify_song, container, false);
 
-        mSharedPreferences = getActivity().getSharedPreferences("SPOTIFY", 0);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("SPOTIFY", 0);
 
         songsInfo = new ArrayList<>();
 
@@ -78,27 +74,24 @@ public class SearchSongFragment extends Fragment {
 
         // handle item clicks
         // currently show toast on click
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        list.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
 
-                TextView getTitle = (TextView) view.findViewById(R.id.tv_title);
-                TextView getArtist = (TextView) view.findViewById(R.id.tv_artist);
-                TextView getAlbum = (TextView) view.findViewById(R.id.tvAlbum);
+            TextView getTitle = (TextView) view1.findViewById(R.id.tv_title);
+            TextView getArtist = (TextView) view1.findViewById(R.id.tv_artist);
+            TextView getAlbum = (TextView) view1.findViewById(R.id.tvAlbum);
 
-                String strTitle = getTitle.getText().toString().trim();
-                String strArtist = getArtist.getText().toString().trim();
-                String strAlbum = getAlbum.getText().toString().trim();
-                String trackID = songsInfo.get(position).get(0);
+            String strTitle = getTitle.getText().toString().trim();
+            String strArtist = getArtist.getText().toString().trim();
+            String strAlbum = getAlbum.getText().toString().trim();
+            String trackID = songsInfo.get(position).get(0);
 
-                Intent intent = new Intent(getActivity(), PlaySongForSpotify.class);
-                intent.putExtra("Title", strTitle);
-                intent.putExtra("Artist", strArtist);
-                intent.putExtra("Album", strAlbum);
-                intent.putExtra("duration_ms", songsInfo.get(position).get(4));
-                startActivity(intent);
-                connected(trackID);
-            }
+            Intent intent = new Intent(getActivity(), PlaySongForSpotify.class);
+            intent.putExtra("Title", strTitle);
+            intent.putExtra("Artist", strArtist);
+            intent.putExtra("Album", strAlbum);
+            intent.putExtra("duration_ms", songsInfo.get(position).get(4));
+            startActivity(intent);
+            connected(trackID);
         });
         return view;
     }
@@ -141,15 +134,12 @@ public class SearchSongFragment extends Fragment {
         if(getActivity() == null)
             return;
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            // create instance of class CustomServerAdapter and pass in the
-            // activity, the titles, and artists that our custom view wants to show
-            CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists, albums);
-            // set adapter to list
-            list.setAdapter(adapter);
-            }
+        getActivity().runOnUiThread(() -> {
+        // create instance of class CustomServerAdapter and pass in the
+        // activity, the titles, and artists that our custom view wants to show
+        CustomSpotifyAdapter adapter = new CustomSpotifyAdapter(getActivity(), titles, artists, albums);
+        // set adapter to list
+        list.setAdapter(adapter);
         }
         );
     }
@@ -213,13 +203,13 @@ public class SearchSongFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mBroadcastReceiver = new MyBroadcastReceiver();
+        MyBroadcastReceiver mBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MyBroadcastReceiver.BroadcastTypes.METADATA_CHANGED);
         intentFilter.addAction(MyBroadcastReceiver.BroadcastTypes.PLAYBACK_STATE_CHANGED);
         intentFilter.addAction(MyBroadcastReceiver.BroadcastTypes.QUEUE_CHANGED);
         intentFilter.addAction(MyBroadcastReceiver.BroadcastTypes.SPOTIFY_PACKAGE);
-        getActivity().getApplicationContext().registerReceiver(mBroadcastReceiver, intentFilter);
+        Objects.requireNonNull(getActivity()).getApplicationContext().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     //user authorization and connect our app with spotify

@@ -215,7 +215,7 @@ public class PlaySongForSpotify extends AppCompatActivity {
 
     // Create the label/string to set for the times
     public String createTimeLabel ( int time){
-        String timelabel = "";
+        String timelabel;
         int min = time / 1000 / 60;
         int sec = time / 1000 % 60;
 
@@ -380,8 +380,8 @@ public class PlaySongForSpotify extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             PlaySongForSpotify playSongForSpotify = activityReference.get();
-            Lyrics x = new Lyrics();
-            x.lyricProcessing(playSongForSpotify.Album, playSongForSpotify.Title, playSongForSpotify.Artist, playSongForSpotify.preferredLanguage, playSongForSpotify.getApplicationContext(), playSongForSpotify.lyric_container);
+            Lyrics lyrics = new Lyrics();
+            lyrics.lyricProcessing(playSongForSpotify.Album, playSongForSpotify.Title, playSongForSpotify.Artist, playSongForSpotify.preferredLanguage, playSongForSpotify.getApplicationContext(), playSongForSpotify.lyric_container);
             return null;
         }
 

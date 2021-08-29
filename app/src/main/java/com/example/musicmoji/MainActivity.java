@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -23,7 +22,6 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 public class MainActivity extends AppCompatActivity {
 
     // Set some parameters required for connection with Spotify
-    private SharedPreferences.Editor editor;
     private static final String CLIENT_ID = ApiKeys.spotifyClientID;
     private static final String REDIRECT_URI = "http://musicmoji.com/callback/";
     // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
@@ -41,11 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         btn_connect = (Button) findViewById(R.id.btn_connect);
 
-        btn_connect.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Connect with Spotify
-                authenticateSpotify();
-            }
+        btn_connect.setOnClickListener(v -> {
+            // Connect with Spotify
+            authenticateSpotify();
         });
     }
 
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 // Response was successful and contains auth token
                 case TOKEN:
                     // Handle successful response
-                    editor = getSharedPreferences("SPOTIFY", 0).edit();
+                    SharedPreferences.Editor editor = getSharedPreferences("SPOTIFY", 0).edit();
                     editor.putString("token", response.getAccessToken());
                     editor.apply();
 //                    Log.d("Spotify Info", "Login Success!");

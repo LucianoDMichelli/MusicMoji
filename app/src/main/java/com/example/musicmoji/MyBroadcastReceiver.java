@@ -3,7 +3,6 @@ package com.example.musicmoji;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
     static final class BroadcastTypes {
@@ -22,19 +21,23 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
         String action = intent.getAction();
 
-        if (action.equals(BroadcastTypes.METADATA_CHANGED)) {
-            String trackId = intent.getStringExtra("id");
-            String artistName = intent.getStringExtra("artist");
-            String albumName = intent.getStringExtra("album");
-            String trackName = intent.getStringExtra("track");
-            int trackLengthInSec = intent.getIntExtra("length", 0);
-            // Do something with extracted information...
-        } else if (action.equals(BroadcastTypes.PLAYBACK_STATE_CHANGED)) {
-            boolean playing = intent.getBooleanExtra("playing", false);
-            int positionInMs = intent.getIntExtra("playbackPosition", 0);
-            // Do something with extracted information
-        } else if (action.equals(BroadcastTypes.QUEUE_CHANGED)) {
-            // Sent only as a notification, your app may want to respond accordingly.
+        switch (action) {
+            case BroadcastTypes.METADATA_CHANGED:
+                String trackId = intent.getStringExtra("id");
+                String artistName = intent.getStringExtra("artist");
+                String albumName = intent.getStringExtra("album");
+                String trackName = intent.getStringExtra("track");
+                int trackLengthInSec = intent.getIntExtra("length", 0);
+                // Do something with extracted information...
+                break;
+            case BroadcastTypes.PLAYBACK_STATE_CHANGED:
+                boolean playing = intent.getBooleanExtra("playing", false);
+                int positionInMs = intent.getIntExtra("playbackPosition", 0);
+                // Do something with extracted information
+                break;
+            case BroadcastTypes.QUEUE_CHANGED:
+                // Sent only as a notification, your app may want to respond accordingly.
+                break;
         }
     }
 }

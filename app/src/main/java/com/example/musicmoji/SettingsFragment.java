@@ -2,10 +2,8 @@ package com.example.musicmoji;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /* Current idea for settings:
@@ -67,19 +66,16 @@ public class SettingsFragment extends Fragment {
 
 
         // handle item clicks moves to next Activity
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView getLanguage = (TextView) view.findViewById(R.id.tv_language);
+        list.setOnItemClickListener((AdapterView.OnItemClickListener) (parent, view1, position, id) -> {
+            TextView getLanguage = (TextView) view1.findViewById(R.id.tv_language);
 
-                String strLanguage = getLanguage.getText().toString().trim();
+            String strLanguage = getLanguage.getText().toString().trim();
 
-                // Save the language
-                // Shared Preference Object
-                saveSharedPreferenceInfo(strLanguage);
-                // Toast to indcate which language is saved.
-                Toast.makeText(getContext(),"Language is saved: " + strLanguage, Toast.LENGTH_LONG).show();
-            }
+            // Save the language
+            // Shared Preference Object
+            saveSharedPreferenceInfo(strLanguage);
+            // Toast to indcate which language is saved.
+            Toast.makeText(getContext(),"Language is saved: " + strLanguage, Toast.LENGTH_LONG).show();
         });
 
         return view;
@@ -115,7 +111,7 @@ public class SettingsFragment extends Fragment {
     }
 
     void saveSharedPreferenceInfo(String language){
-        SharedPreferences simpleAppInfo = getContext().getSharedPreferences("LanguageSelection", Context.MODE_PRIVATE);  //Private means no other Apps can access this.
+        SharedPreferences simpleAppInfo = Objects.requireNonNull(getContext()).getSharedPreferences("LanguageSelection", Context.MODE_PRIVATE);  //Private means no other Apps can access this.
 
         SharedPreferences.Editor editor = simpleAppInfo.edit();
         editor.putString("languageFull", language);

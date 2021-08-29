@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -40,7 +41,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.example.musicmoji.R.string.LyricsUnavailable;
+import static com.example.musicmoji.R.string.lyrics_unavailable;
+import static com.example.musicmoji.R.string.translationOrEmoji_unavailable_warning;
 
 public class Lyrics {
 
@@ -203,7 +205,7 @@ public class Lyrics {
         // (ex. alias "struggling" -> struggling -> struggl, struggle, strugg, struggler),
         // checked for validity using Python's nltk.corpus package,
         // and going through results manually to determine if emoji is correct
-        final HashSet<String> WILL_RETURN_INCORRECT_EMOJI = new HashSet<>(Arrays.asList("aer", "aes", "ager", "agin'", "aging",
+        final HashSet<String> WILL_RETURN_INCORRECT_EMOJI = new HashSet<>(Arrays.asList("acting", "actin'", "aer", "aes", "ager", "agin'", "aging",
                 "ain't", "ary", "ass", "askin'", "asking", "awin'", "awing", "bac", "badge", "badgerer", "ban", "barb", "barbe", "bas", "bater", "batin'",
                 "bating", "batter", "bay", "bearder", "beardin'", "bearding", "bearer", "bearin'", "bearing", "bein'", "being", "beginning", "bel", "belly",
                 "beni", "bent", "bentin'", "benting", "ber", "bes", "bice", "bier", "biting", "bitin'", "bin'", "bing", "bis", "blindlin'", "blindling",
@@ -223,14 +225,14 @@ public class Lyrics {
                 "hater", "helin'", "heling", "hin'", "hing", "hippin'", "hipping", "hop", "huer", "icin'", "icing", "I'd", "ide", "I'll",
                 "innin'", "inning", "iter", "its", "it's", "jeer", "jin'", "jing", "kier", "kin", "land", "las", "lawin'", "lawing", "lay",
                 "lea", "leafer", "leave", "ledge", "ledgin'", "ledging", "leger", "lier", "lin", "lin'", "ling", "linin'",
-                "lining", "lis", "living", "loo", "lys", "makin'", "making", "mal", "malt", "maltin'", "malting", "mang", "many", "mas", "may", "mil", "min'", "ming", "mone",
+                "lining", "lis", "living", "loo", "lys", "makin'", "making", "mal", "malt", "maltin'", "malting", "mang", "many", "mas", "may", "mil", "min'", "ming", "mone", "mos",
                 "moo", "mooin'", "mooing", "mooner", "moonin'", "mooning", "neer", "need", "newin'", "newing", "nig", "nigh", "not",
                 "numb", "numbin'", "numbing", "ode", "oer", "offer", "offin'", "offing", "omer", "oner", "ons", "owin'", "owing",
                 "owler", "owlin'", "owling", "pad", "page", "pain", "painin'", "paining", "pant", "pantin'", "panting", "park",
                 "parkin", "part", "past", "pastin'", "pasting", "pea", "peacher", "peer", "per", "pes", "peter", "phon", "phot",
                 "pian", "picker", "pilin'", "piling", "pin'", "ping", "plan", "pooler", "pounder", "poundin'", "pounding",
                 "pow", "presenter", "pressin'", "pressing", "pridin'", "priding", "privateer", "pursed", "rabbi", "rag", "rainer", "rame",
-                "rater", "ratin'", "rating", "red", "register", "rewin", "ringin'", "ringing", "roc", "roer", "ruer", "ruin'", "ruing",
+                "rater", "ratin'", "rating", "red", "register", "rewin", "ringin'", "ringing", "roc", "roer", "ruer", "ruin'", "ruing", "ruling", "rulin'",
                 "sal", "sant", "scar", "scoot", "scout", "scoutin'", "scouting", "scree", "screener", "screenin'", "screening",
                 "secre", "seed", "seein'", "seeing", "seer", "senega", "ser", "sevener", "shee", "sher", "shi", "shiel", "shielin'",
                 "shieling", "shin", "sho", "shoo", "show", "showin'", "showing", "shy", "sic", "sier", "sill", "sin", "single", "sis", "sker", "skid",
@@ -246,7 +248,7 @@ public class Lyrics {
 // If song does not return lyrics for some reason, no need to go through the whole checking process
         if (lyrics.equals("")) {
             // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
-            new Handler(Looper.getMainLooper()).post(() -> lyric_container.setText(LyricsUnavailable));
+            new Handler(Looper.getMainLooper()).post(() -> lyric_container.setText(lyrics_unavailable));
         }
 
         else {
@@ -293,8 +295,8 @@ public class Lyrics {
                 if (!lyricsLanguageTag.equals("en") && !lyricsLanguageTag.equals(preferredLanguage)) {
                     emojiLyrics.append(returnPunctuation(line)).append("\n"); // We'll display the original lyrics then the translated ones on the next line
 
-                    // 'til and 'Til are not translated properly
-                    line = line.replace("'til","until").replace("'Til","Until");
+                    // These are not translated properly
+                    line = line.replace("'til","until").replace("'Til","Until").replace("'Cause","Because").replace("'cause","because");
 
                     if (!lyricsLanguageTag.equals("")) {
                         try {
@@ -315,8 +317,8 @@ public class Lyrics {
                                 line = languageTranslator.translate(translateOptions)
                                         .execute().getResult().getTranslations().get(0).getTranslation();
                             } catch (Exception e2) {
-                                // Translator can't determine source language
 
+                                // Translator can't determine source language
                                 emojiLyrics.append("(Translation unavailable (translator cannot determine source language)) \n\n");
                                 continue;
                             }
@@ -890,7 +892,7 @@ public class Lyrics {
                                 .addText(punctuationReturned)
                                 .modelId("en-" + preferredLanguage)
                                 .build();
-                        try {
+//                        try {
                             String result = languageTranslator.translate(translateOptions)
                                     .execute().getResult().getTranslations().get(0).getTranslation();
 
@@ -900,10 +902,12 @@ public class Lyrics {
 
                             emojiLyrics.append(spanResult).append("\n\n");
 
-                        }
-                        catch (Exception e) {
-                        }
+//                        }
+//                        catch (Exception e) {
+//                        }
                     }
+
+                    //TODO shouldn't this address the unknown language origin issue? -> also addressed in first set of translates --> find english and non-english songs with unkown language and test again
                     catch (Exception e) { // Just in case lineLyrics was not in English/there was a problem, shouldn't happen though
                         try {
                             TranslateOptions translateOptions = new TranslateOptions.Builder()
@@ -911,9 +915,12 @@ public class Lyrics {
                                     .target(preferredLanguage)
                                     .build();
 
-                            try {
+//                            try {
                                 String result = languageTranslator.translate(translateOptions)
                                         .execute().getResult().getTranslations().get(0).getTranslation();
+
+//                            String result = Objects.requireNonNull(languageTranslator).translate(translateOptions)
+//                                    .execute().getResult().getTranslations().get(0).getTranslation();
 
                                 // Make translated text red
                                 SpannableString spanResult = new SpannableString(result);
@@ -921,8 +928,8 @@ public class Lyrics {
 
                                 emojiLyrics.append(spanResult).append("\n\n");
 
-                            } catch (Exception e2) {
-                            }
+//                            } catch (Exception ignored) {
+//                            }
                         } catch (Exception e2) {
                             // Translator can't determine source language
                             e2.printStackTrace();
@@ -946,14 +953,15 @@ public class Lyrics {
             if (!canGenerateEmojis) {
                 // If no emojis can be generated for the song for whatever reason, let the user know and then just display the lyrics
                 if (retried) {
-                    String warning = "**There was a problem determining the language of this song**\n**Emojis/translations could not be generated**\n\n";
+                    String warning = translationOrEmoji_unavailable_warning + returnPunctuation(lyrics);
                     // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
                     new Handler(Looper.getMainLooper()).post(() ->
-                            lyric_container.setText(warning + returnPunctuation(lyrics)));
+                            lyric_container.setText(warning));
                 }
                 // If no emojis are generated during lyricProcessing(), we'll retry once as if the song language and language preference are in English
                 // If it fails again, we'll just return the original lyrics
                 else {
+                    //TODO should this even be necessary? unknown language should already be addressed so theoretically this should never be reached?
                     retried = true;
                     preferredLanguage = "en";
                     lyricsLanguageTag = "en";

@@ -33,7 +33,8 @@
     <string name="language">Language</string>
     <string name="languageSettingsText">Which language would you like song lyrics to be displayed in (in addition to original language)?</string>
     <string name="lyrics_placeholder">Generating emojis/translations...\n(this may take a few minutes)</string>
-    <string name="LyricsUnavailable">Lyrics unavailable for this song</string>
+    <string name="translationOrEmoji_unavailable_warning">**There was a problem determining the language of this song**\n**Emojis/translations could not be generated**\n\n</string>
+    <string name="lyrics_unavailable">Lyrics unavailable for this song</string>
 
 
 </resources>

@@ -159,19 +159,16 @@ public class PlaySong extends AppCompatActivity {
         });
 
         // sets the button listener to listen to user clicks
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If song is not playing, start song
-                if (!mp.isPlaying()){
-                    mp.start();
-                    playBtn.setBackgroundResource(R.drawable.pause);
-                }
-                else {
-                    // if song is playing, pause it
-                    mp.pause();
-                    playBtn.setBackgroundResource(R.drawable.play);
-                }
+        playBtn.setOnClickListener(v -> {
+            // If song is not playing, start song
+            if (!mp.isPlaying()){
+                mp.start();
+                playBtn.setBackgroundResource(R.drawable.pause);
+            }
+            else {
+                // if song is playing, pause it
+                mp.pause();
+                playBtn.setBackgroundResource(R.drawable.play);
             }
         });
 
@@ -226,8 +223,8 @@ public class PlaySong extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             PlaySong playSong = activityReference.get(); // Needed to make class static (AsyncTasks should be static or leaks could occur)
-            Lyrics x = new Lyrics();
-            x.lyricProcessing(playSong.Album, playSong.Title, playSong.Artist, playSong.preferredLanguage, playSong.getApplicationContext(), playSong.lyric_container);
+            Lyrics lyrics = new Lyrics();
+            lyrics.lyricProcessing(playSong.Album, playSong.Title, playSong.Artist, playSong.preferredLanguage, playSong.getApplicationContext(), playSong.lyric_container);
             mp.start();
             new Handler(Looper.getMainLooper()).post(() ->
                 playSong.playBtn.setBackgroundResource(R.drawable.pause));
@@ -291,7 +288,7 @@ public class PlaySong extends AppCompatActivity {
 
     // Create the label/string to set for the times
     public String createTimeLabel(int time) {
-        String timelabel = "";
+        String timelabel;
         int min = time / 1000 / 60;
         int sec = time / 1000 % 60;
 

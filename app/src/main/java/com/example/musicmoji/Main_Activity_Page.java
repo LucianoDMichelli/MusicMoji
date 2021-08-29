@@ -19,7 +19,6 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 
 public class Main_Activity_Page extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,11 +33,11 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     public static PlayerApi playerApi;
     public static Boolean isPlaying;
     // Set the connection parameters
-    public static ConnectionParams connectionParams =
-            new ConnectionParams.Builder(CLIENT_ID)
-                    .setRedirectUri(REDIRECT_URI)
-                    .showAuthView(true)
-                    .build();
+//    public static ConnectionParams connectionParams =
+//            new ConnectionParams.Builder(CLIENT_ID)
+//                    .setRedirectUri(REDIRECT_URI)
+//                    .showAuthView(true)
+//                    .build();
 
 
     @Override
@@ -209,22 +208,22 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
                 });
     }
 
-    // Implements this when user is connected
-    // It gets the user's playlist information
-    private void connected(String trackID) {
-        // Play a playlist
-        playerApi.play("spotify:track:"+ trackID);
-
-        // Subscribe to PlayerState
-        playerApi
-                .subscribeToPlayerState()
-                .setEventCallback(playerState -> {
-                    final Track track = playerState.track;
-                    if (track != null) {
-                        isPlaying = !(playerState.isPaused);
-                    }
-                });
-    }
+//    // Implements this when user is connected
+//    // It gets the user's playlist information
+//    private void connected(String trackID) {
+//        // Play a playlist
+//        playerApi.play("spotify:track:"+ trackID);
+//
+//        // Subscribe to PlayerState
+//        playerApi
+//                .subscribeToPlayerState()
+//                .setEventCallback(playerState -> {
+//                    final Track track = playerState.track;
+//                    if (track != null) {
+//                        isPlaying = !(playerState.isPaused);
+//                    }
+//                });
+//    }
 
     // If the connection is stopped, then disconnect from Spotify
     @Override

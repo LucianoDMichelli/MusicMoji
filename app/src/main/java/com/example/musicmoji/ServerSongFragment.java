@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +64,7 @@ public class ServerSongFragment extends Fragment {
                         titles.add(s.getTitle());
                         artists.add(s.getArtist());
                         // I did not write this part so I have no idea where the title and artist data is stored
-                        // (possibly reading it from the files? not sure but they don't all have the album name anyway)
+                        // (possibly reading it from the files? not sure but they don't all have the album name anyway so better to add them all in the code here)
                         switch (s.getTitle()) {
                             case ("Boulevard of Broken Dreams"):
                                 albums.add("Greatest Hits: God's Favorite Band");
