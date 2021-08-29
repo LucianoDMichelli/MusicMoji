@@ -1,4 +1,7 @@
 # MusicMoji
+
+*For devices running Lollipop (API 21) and newer*
+
 Reads lyrics of selected song and displays them for the user with emojis inserted
 
 Allows users to play music through Spotify using their Recently Played playlist, or by using the search function
@@ -35,7 +38,7 @@ Originally a school group project
 * Spotify Android SDK -> https://developer.spotify.com/documentation/android/
 * emoji-java by vdurmont -> https://github.com/vdurmont/emoji-java
 
-## Notes
+## Notes/Instructions
 
 Spotify must be installed and you must have a premium account for the app to work (free accounts can only use shuffle play, so the songs that users select will not actually be the ones that are played). The app also cannot be in offline mode
 
@@ -52,4 +55,5 @@ For Spotify, you will need to [register your app](https://developer.spotify.com/
 * Autoplay for Spotify songs may not work if saved lyrics are retrieved
 * Spotify authentication is required to use the app (even if user just wants to listen to the pre-loaded songs). User also has to authenticate each time they use the app, so Spotify needs to be in online mode and the user has to have an internet connection (again, even if they only want to listen to the pre-loaded songs)
     * User will only be required to grant permissions once; subsequent uses of the app will only require tapping the authentication button
-* Non-English songs that are translated will only have emojis in the translated lyrics, not in the original lyrics (this was a decision made due to time constraints for the app presentation)
+* Non-English songs that are translated will only have emojis in the translated lyrics, not in the original lyrics (ex. Spanish -> Portuguese translation will only have emojis in the Portuguese lyrics)
+    * This was a decision made due to time constraints for the app presentation
