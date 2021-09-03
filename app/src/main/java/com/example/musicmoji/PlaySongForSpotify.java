@@ -105,14 +105,6 @@ public class PlaySongForSpotify extends AppCompatActivity {
 
         int totalTime = Integer.parseInt(intent.getStringExtra("duration_ms"));
 
-        // Retrieve the Saved Language
-        SharedPreferences language = getBaseContext().getSharedPreferences("LanguageSelection", Context.MODE_PRIVATE);
-        // String for which the current Language is
-        String lang = language.getString("languageFull", "None");
-        // Toast to tell the user which Language it is
-        Toast.makeText(getApplicationContext(), "The Selected Language is: " + lang, Toast.LENGTH_SHORT).show();
-
-
         // set preferredLanguage using SharedPreferences
         retrievePreferredLanguage();
 
@@ -416,6 +408,9 @@ public class PlaySongForSpotify extends AppCompatActivity {
     void retrievePreferredLanguage(){
         SharedPreferences language = getSharedPreferences("LanguageSelection", Context.MODE_PRIVATE);
         preferredLanguage = language.getString("language", "");
+
+        String lang = language.getString("languageFull", "None");
+        Toast.makeText(getApplicationContext(), getString(R.string.selected_language) + lang, Toast.LENGTH_SHORT).show();
     }
 
 }

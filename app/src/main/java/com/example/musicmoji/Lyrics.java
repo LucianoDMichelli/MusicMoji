@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -189,7 +188,7 @@ public class Lyrics {
             // All setTexts need to be run on the UI thread to avoid android.view.ViewRootImpl$CalledFromWrongThreadException (only the original thread that created a view hierarchy can touch its views)
             new Handler(Looper.getMainLooper()).post(() -> {
                 lyric_container.setText(storedLyrics);
-                Toast.makeText(context, "Retrieved previously generated lyrics", Toast.LENGTH_SHORT).show(); // fixes java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
+                Toast.makeText(context, context.getString(R.string.lyrics_retrievedPreviouslyGenerated), Toast.LENGTH_SHORT).show(); // fixes java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
             });
             return;
         }
@@ -319,7 +318,7 @@ public class Lyrics {
                             } catch (Exception e2) {
 
                                 // Translator can't determine source language
-                                emojiLyrics.append("(Translation unavailable (translator cannot determine source language)) \n\n");
+                                emojiLyrics.append(context.getString(R.string.lyrics_cannotDetermineSourceLanguage)).append(" \n\n");
                                 continue;
                             }
                         }

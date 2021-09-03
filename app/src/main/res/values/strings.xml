@@ -35,6 +35,20 @@
     <string name="lyrics_placeholder">Generating emojis/translations...\n(this may take a few minutes)</string>
     <string name="translationOrEmoji_unavailable_warning">**There was a problem determining the language of this song**\n**Emojis/translations could not be generated**\n\n</string>
     <string name="lyrics_unavailable">Lyrics unavailable for this song</string>
+    <string name="lyrics_retrievedPreviouslyGenerated">Retrieved previously generated lyrics</string>
+    <string name="lyrics_cannotDetermineSourceLanguage">(Translation unavailable (translator cannot determine source language)) \n\n</string>
+    <string name="Main_authNotRecognized">An Error Has Occurred: Authentication Not Recognized</string>
+    <string name="Main_authStopped">Authentication Process Stopped. Please Authenticate with Spotify</string>
+    <string name="selected_language">\"The Selected Language is: \"</string>
+    <string name="Language_English">English</string>
+    <string name="Language_Spanish">Spanish</string>
+    <string name="Language_Portuguese">Portuguese</string>
+    <string name="Language_French">French</string>
+    <string name="Language_ChineseSimplified">Chinese (Simplified)</string>
+    <string name="Language_Original">None (only display original language)</string>
+    <string name="Settings_languageSaved">"Language is saved: "</string>
+    <string name="Settings_languageUpdated">Language Preference Updated</string>
+    <string name="logo">logo</string>
 
 
 </resources>

@@ -327,7 +327,7 @@ public class PlaySong extends AppCompatActivity {
         preferredLanguage = language.getString("language", "");
 
         String lang = language.getString("languageFull", "None");
-        Toast.makeText(getApplicationContext(), "The Selected Language is: " + lang, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.selected_language) + lang, Toast.LENGTH_SHORT).show();
     }
 
 }

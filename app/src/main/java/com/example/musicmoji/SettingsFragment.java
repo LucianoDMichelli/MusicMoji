@@ -3,6 +3,7 @@ package com.example.musicmoji;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,13 @@ public class SettingsFragment extends Fragment {
     ListView list;
     public ArrayList<String> languages = new ArrayList<String>();
 
+    private final String English = getString(R.string.Language_English);
+    private final String Spanish = getString(R.string.Language_Spanish);
+    private final String Portuguese = getString(R.string.Language_Portuguese);
+    private final String French = getString(R.string.Language_French);
+    private final String ChineseSimplified = getString(R.string.Language_ChineseSimplified);
+    private final String Original = getString(R.string.Language_Original);
+
 
     @Nullable
     @Override
@@ -48,12 +56,12 @@ public class SettingsFragment extends Fragment {
 
 
         // Add some decided languages
-        languages.add("English");
-        languages.add("Spanish");
-        languages.add("Portuguese");
-        languages.add("French");
-        languages.add("Chinese (Simplified)");
-        languages.add("None (only display original language)");
+        languages.add(English);
+        languages.add(Spanish);
+        languages.add(Portuguese);
+        languages.add(French);
+        languages.add(ChineseSimplified);
+        languages.add(Original);
 
         // get the listview we want to customize
         list = (ListView) view.findViewById(R.id.language_listview);
@@ -74,8 +82,8 @@ public class SettingsFragment extends Fragment {
             // Save the language
             // Shared Preference Object
             saveSharedPreferenceInfo(strLanguage);
-            // Toast to indcate which language is saved.
-            Toast.makeText(getContext(),"Language is saved: " + strLanguage, Toast.LENGTH_LONG).show();
+            // Toast to indicate which language is saved.
+            Toast.makeText(getContext(),getString(R.string.Settings_languageSaved) + strLanguage, Toast.LENGTH_LONG).show();
         });
 
         return view;
@@ -115,17 +123,22 @@ public class SettingsFragment extends Fragment {
 
         SharedPreferences.Editor editor = simpleAppInfo.edit();
         editor.putString("languageFull", language);
-        switch (language) {
-            case "English": editor.putString("language", "en"); break;
-            case "Spanish": editor.putString("language", "es"); break;
-            case "Portuguese": editor.putString("language", "pt"); break;
-            case "French": editor.putString("language", "fr"); break;
-            case "Chinese (Simplified)": editor.putString("language", "zh"); break;
-            case "None (only display original language)": editor.putString("language", ""); break;
-
+        // Originally switch statement but this does not work when using string resources
+        if (English.equals(language)) {
+            editor.putString("language", "en");
+        } else if (Spanish.equals(language)) {
+            editor.putString("language", "es");
+        } else if (Portuguese.equals(language)) {
+            editor.putString("language", "pt");
+        } else if (French.equals(language)) {
+            editor.putString("language", "fr");
+        } else if (ChineseSimplified.equals(language)) {
+            editor.putString("language", "zh");
+        } else {
+            editor.putString("language", "");
         }
         editor.commit();
 
-        Toast.makeText(getContext(), "Language Preference Updated", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.Settings_languageUpdated), Toast.LENGTH_LONG).show();
     }
 }
