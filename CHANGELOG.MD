@@ -14,4 +14,5 @@
 * Fixed pause/play icons not updating on initial pause while waiting for lyrics
 * Added offline mode (allows users to listen to Server Songs without connecting to Spotify or having an internet connection)
 * Updated app icon to use the logo on the start screen instead of Android default
+* Fixed issue resulting from lyric API sometimes returning "??" as song language
 * Various other fixes and code cleanup
