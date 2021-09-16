@@ -6,12 +6,14 @@ Reads lyrics of selected song and displays them for the user with emojis inserte
 
 Allows users to play music through Spotify using their Recently Played playlist, or by using the search function
 
-Also comes pre-loaded with 10 songs, in the section labelled "Server Songs"
+Also comes pre-loaded with 10 songs, in the section labelled "Server Songs".
+
+**New** _Offline Mode:_ Allows users to listen to the Server Songs without connecting to Spotify and without an internet connection (note: songs must be played at least once with an internet connection in order to save the lyrics)
 
 Originally a school group project
 
-**Demo:** https://youtu.be/jpO03njJhgI
-
+**_Demo:_** https://youtu.be/jpO03njJhgI
+![start screen](https://i.gyazo.com/bb5d76b9927cdb0900e2152e561a5a9d.png)
 ![translated to Portuguese](https://i.gyazo.com/95658ed53697893ef7f5e09cd3bd049d.png)
 
 ## My Contributions
@@ -53,7 +55,7 @@ For Spotify, you will need to [register your app](https://developer.spotify.com/
 ## Known Bugs/Issues
 * There is a slight delay when pausing/unpausing Spotify songs (possibly an issue with the Spotify SDK)
 * Autoplay for Spotify songs may not work if saved lyrics are retrieved
-* Spotify authentication is required to use the app (even if user just wants to listen to the pre-loaded songs). User also has to authenticate each time they use the app, so Spotify needs to be in online mode and the user has to have an internet connection (again, even if they only want to listen to the pre-loaded songs)
+* Spotify authentication is required to use the app ~~(even if user just wants to listen to the pre-loaded songs)~~. User also has to authenticate each time they use the app, so Spotify needs to be in online mode and the user has to have an internet connection ~~(again, even if they only want to listen to the pre-loaded songs)~~
     * User will only be required to grant permissions once; subsequent uses of the app will only require tapping the authentication button
 * Non-English songs that are translated will only have emojis in the translated lyrics, not in the original lyrics (ex. Spanish -> Portuguese translation will only have emojis in the Portuguese lyrics)
     * This was a decision made due to time constraints for the app presentation

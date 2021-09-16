@@ -39,7 +39,7 @@
     <string name="lyrics_cannotDetermineSourceLanguage">(Translation unavailable (translator cannot determine source language)) \n\n</string>
     <string name="Main_authNotRecognized">An Error Has Occurred: Authentication Not Recognized</string>
     <string name="Main_authStopped">Authentication Process Stopped. Please Authenticate with Spotify</string>
-    <string name="selected_language">\"The Selected Language is: \"</string>
+    <string name="selected_language">\The Selected Language is: \</string>
     <string name="Language_English">English</string>
     <string name="Language_Spanish">Spanish</string>
     <string name="Language_Portuguese">Portuguese</string>
@@ -49,6 +49,11 @@
     <string name="Settings_languageSaved">"Language is saved: "</string>
     <string name="Settings_languageUpdated">Language Preference Updated</string>
     <string name="logo">logo</string>
+    <string name="MainActivity_authNote">Note:\nAuthentication should only take a few seconds at most.\nIf it takes longer, make sure Spotify is not in offline mode.</string>
+    <string name="MainActivity_continueOffline">Continue offline\n(server songs only)</string>
+    <string name="SpotifySongFragment_couldnotretrieve">Could not retrieve playlist</string>
+    <string name="SearchSongFragment_couldnotretrieve">Could not retrieve search results</string>
+    <string name="Lyrics_offlineNotSaved">Lyrics for this song are not yet saved. Songs must be played at least once with an internet connection to save their lyrics.</string>
 
 
 </resources>

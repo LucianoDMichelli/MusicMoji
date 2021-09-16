@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 /*
     Most of the stuff in here is all temporary just to test it.
@@ -177,7 +178,7 @@ public class PlaySong extends AppCompatActivity {
         // Create thread to update timeBar progress and the elapsed time
         Handler handler = new Handler(getMainLooper(), new TimeBarHandler());
         new Thread(() -> {
-            while (mp != null) {  //isplaying
+            while (mp != null) {  //isPlaying does not work
                 try {
                     Message msg = new Message();
                     msg.what = mp.getCurrentPosition();
@@ -259,6 +260,7 @@ public class PlaySong extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         mp.release();
+        mp = null;
     }
 
     // Media player handler to handle the changes

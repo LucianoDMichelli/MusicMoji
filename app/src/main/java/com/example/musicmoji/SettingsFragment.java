@@ -41,18 +41,24 @@ public class SettingsFragment extends Fragment {
     ListView list;
     public ArrayList<String> languages = new ArrayList<String>();
 
-    private final String English = getString(R.string.Language_English);
-    private final String Spanish = getString(R.string.Language_Spanish);
-    private final String Portuguese = getString(R.string.Language_Portuguese);
-    private final String French = getString(R.string.Language_French);
-    private final String ChineseSimplified = getString(R.string.Language_ChineseSimplified);
-    private final String Original = getString(R.string.Language_Original);
-
+    private String English;
+    private String Spanish;
+    private String Portuguese;
+    private String French;
+    private String ChineseSimplified;
+    private String Original;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        English = getContext().getString(R.string.Language_English);
+        Spanish = getContext().getString(R.string.Language_Spanish);
+        Portuguese = getContext().getString(R.string.Language_Portuguese);
+        French = getContext().getString(R.string.Language_French);
+        ChineseSimplified = getContext().getString(R.string.Language_ChineseSimplified);
+        Original = getContext().getString(R.string.Language_Original);
 
 
         // Add some decided languages

@@ -12,3 +12,6 @@
 * Fixed potential Handler leak in PlaySong seekbar (the part that updates current timestamp)
 * Fixed Spotify pausing (initial pause and pauses when leaving activity)
 * Fixed pause/play icons not updating on initial pause while waiting for lyrics
+* Added offline mode (allows users to listen to Server Songs without connecting to Spotify or having an internet connection)
+* Updated app icon to use the logo on the start screen instead of Android default
+* Various other fixes and code cleanup

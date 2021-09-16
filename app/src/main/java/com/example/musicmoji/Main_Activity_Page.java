@@ -8,11 +8,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -32,6 +35,7 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     public static SpotifyAppRemote mSpotifyAppRemote;
     public static PlayerApi playerApi;
     public static Boolean isPlaying;
+    private String token;
     // Set the connection parameters
 //    public static ConnectionParams connectionParams =
 //            new ConnectionParams.Builder(CLIENT_ID)
@@ -44,6 +48,8 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+        token = getSharedPreferences("SPOTIFY", 0).getString("token", "OFFLINE");
 
         // Initialize toolbar and set up the support action
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,9 +93,14 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
 //                Toast.makeText(this, "Server Clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_spotify:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new SpotifySongFragment()).commit();
+                if (token.equals("OFFLINE")) {
+                    backToAuthPage();
+                }
+                else {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new SpotifySongFragment()).commit();
 //                Toast.makeText(this, "Spotify Clicked", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -108,6 +119,12 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
         // we want to close drawer/navigation bar after we load a fragment
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // If user tries to access Spotify features, send them back to auth page
+    private void backToAuthPage() {
+        Toast.makeText(this, "Requires Spotify connection", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(Main_Activity_Page.this, MainActivity.class));
     }
 
     // opens the drawer/navigation menu bar
@@ -148,15 +165,20 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                SearchSongFragment searchSongFragment = new SearchSongFragment();
+                if (token.equals("OFFLINE")) {
+                    backToAuthPage();
+                }
+                else {
+                    SearchSongFragment searchSongFragment = new SearchSongFragment();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("search term",query);
-                searchSongFragment.setArguments(bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("search term", query);
+                    searchSongFragment.setArguments(bundle);
 
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, searchSongFragment)
-                        .commit();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, searchSongFragment)
+                            .commit();
+                }
 
                 return true;
             }
@@ -176,36 +198,39 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
     @Override
     protected void onStart() {
         super.onStart();
-        // We will start writing our code here.
 
-        //SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-        // Set the connection parameters
-        ConnectionParams connectionParams =
-                new ConnectionParams.Builder(CLIENT_ID)
-                        .setRedirectUri(REDIRECT_URI)
-                        .showAuthView(true)
-                        .build();
+        if (!token.equals("OFFLINE")) {
+            // We will start writing our code here.
 
-        // Connect to Spotify using the connection parameters and
-        // set a Connection listener and implement the ConnectionListener
-        // methods. Handles connection failures and success
-        SpotifyAppRemote.connect(this, connectionParams,
-                new Connector.ConnectionListener() {
+            //SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+            // Set the connection parameters
+            ConnectionParams connectionParams =
+                    new ConnectionParams.Builder(CLIENT_ID)
+                            .setRedirectUri(REDIRECT_URI)
+                            .showAuthView(true)
+                            .build();
 
-                    @Override
-                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                        mSpotifyAppRemote = spotifyAppRemote;
-                        playerApi = mSpotifyAppRemote.getPlayerApi();
-                        // Now you can start interacting with App Remote
-                    }
+            // Connect to Spotify using the connection parameters and
+            // set a Connection listener and implement the ConnectionListener
+            // methods. Handles connection failures and success
+            SpotifyAppRemote.connect(this, connectionParams,
+                    new Connector.ConnectionListener() {
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.e("MainActivity", throwable.getMessage(), throwable);
+                        @Override
+                        public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                            mSpotifyAppRemote = spotifyAppRemote;
+                            playerApi = mSpotifyAppRemote.getPlayerApi();
+                            // Now you can start interacting with App Remote
+                        }
 
-                        // Something went wrong when attempting to connect! Handle errors here
-                    }
-                });
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            Log.e("MainActivity", throwable.getMessage(), throwable);
+
+                            // Something went wrong when attempting to connect! Handle errors here
+                        }
+                    });
+        }
     }
 
 //    // Implements this when user is connected
@@ -225,20 +250,28 @@ public class Main_Activity_Page extends AppCompatActivity implements NavigationV
 //                });
 //    }
 
-    // If the connection is stopped, then disconnect from Spotify
+    // If the connection is stopped, then disconnect from Spotify if it is active
     @Override
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
-        playerApi.pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        try {
+            playerApi.pause();
+            SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        }
+        catch (Exception ignored) {
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        playerApi.pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        try {
+            playerApi.pause();
+            SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        }
+        catch (Exception ignored) {
+        }
     }
 
 

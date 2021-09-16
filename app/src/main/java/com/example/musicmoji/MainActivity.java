@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Button btn_connect;
+    private Button btn_continueOffline;
 
 
 
@@ -37,11 +40,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Allows users to use app without internet connection
+
         btn_connect = (Button) findViewById(R.id.btn_connect);
+        btn_continueOffline = (Button) findViewById(R.id.btn_continueOffline);
 
         btn_connect.setOnClickListener(v -> {
             // Connect with Spotify
             authenticateSpotify();
+        });
+
+        btn_continueOffline.setOnClickListener(v -> {
+            goToMainPage("OFFLINE");
         });
     }
 
@@ -72,12 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 // Response was successful and contains auth token
                 case TOKEN:
                     // Handle successful response
-                    SharedPreferences.Editor editor = getSharedPreferences("SPOTIFY", 0).edit();
-                    editor.putString("token", response.getAccessToken());
-                    editor.apply();
-//                    Log.d("Spotify Info", "Login Success!");
-                    // for now just moves to next activity
-                    startActivity(new Intent(MainActivity.this, Main_Activity_Page.class));
+                    goToMainPage(response.getAccessToken());
                     break;
 
                 // Auth flow returned an error
@@ -93,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.Main_authStopped), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void goToMainPage(String token) {
+        SharedPreferences.Editor editor = getSharedPreferences("SPOTIFY", 0).edit();
+        editor.putString("token", token);
+        editor.commit();
+//                    Log.d("Spotify Info", "Login Success!");
+        // for now just moves to next activity
+        startActivity(new Intent(MainActivity.this, Main_Activity_Page.class));
     }
 
 }
